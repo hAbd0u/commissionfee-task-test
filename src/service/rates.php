@@ -44,6 +44,7 @@ class Rates
         }
 
         $this->error_description = 'Currency symbol couldn\'t be found.';
+
         return 0;
     }
 

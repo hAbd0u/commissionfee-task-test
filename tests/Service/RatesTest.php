@@ -10,7 +10,8 @@ use CommissionFees\Service\Rates;
 class RatesTest extends TestCase
 {
     private $rates;
-    public function setUp()
+    
+    public function setUp(): void
     {
         $this->rates = new Rates();
     }
