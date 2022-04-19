@@ -33,7 +33,7 @@ class Rates extends Logs
         }
 
         if (isset($options['currency_precision'])) {
-            $this->currencies = $options['currency_precision'];
+            self::$currencies = $options['currency_precision'];
         }
     }
 
