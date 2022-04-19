@@ -16,6 +16,7 @@ return $config->setRules([
         'strict_param' => true,
         'declare_strict_types' => true,
         'yoda_style' => false,
+        'concat_space' => ['spacing' => 'one'],
     ])
     ->setFinder($finder)
     ->setUsingCache(false)

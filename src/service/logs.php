@@ -32,7 +32,7 @@ class Logs
     {
         $this->error_description = $message;
         if ($this->isDebugMode) {
-            echo $message.PHP_EOL;
+            echo $message . PHP_EOL;
         }
     }
 
