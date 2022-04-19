@@ -4,35 +4,36 @@ declare(strict_types=1);
 
 namespace CommissionFees\Service;
 
-const DEPOSIT_FEE_CLIENT = 0.03 / 100;
-const DEPOSIT_FEE_BUSINESS = 0.03 / 100;
+require_once __DIR__.'/../../vendor/autoload.php';
 
-class Deposit
+class Deposit extends Operation
 {
+    public const DEPOSIT_FEE_CLIENT = 0.03 / 100;
+    public const DEPOSIT_FEE_BUSINESS = 0.03 / 100;
+
     public function __construct()
     {
     }
 
     /**
-     * Calculate the fees of an amount
-     * 
-     * @return float    The final fees 
+     * Calculate the fees of an amount.
+     *
+     * @return float The final fees
      */
-    public static function getDepositFee(float $amount): float
+    public static function calcFee(string $account_type, float $discount_fee, float $amount): float
     {
-        return ($amount * DEPOSIT_FEE_CLIENT);
+        $fee_percent = ($account_type === 'private') ? self::DEPOSIT_FEE_CLIENT : self::DEPOSIT_FEE_BUSINESS;
+
+        return $amount * $fee_percent;
     }
 
     /**
-     * Calculate the final amount
-     * 
-     * @return float    The final amount 
+     * Calculate the final amount.
+     *
+     * @return float The final amount
      */
-    public static function getFinalAMount(float $amount): float
+    public static function getFinalAmount(int $account_type, float $discount_fee, float $amount): float
     {
-        return ($amount - self::getDepositFee($amount));
+        return $amount - self::calcFee($account_type, $discount_fee, $amount);
     }
-
-
-
 }
