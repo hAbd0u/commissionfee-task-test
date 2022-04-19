@@ -6,33 +6,34 @@ namespace CommissionFees\Service;
 
 class Logs
 {
+    private $isDebugMode = false;
     private $error_description = '';
 
     public function __construct()
     {
-        $this->isDebugMode = false;
     }
 
+    /**
+     * Set the debugging mode.
+     *
+     * @param bool $enabled Set the debugging mode
+     */
     public function setDebugMode(bool $enabled): void
     {
         $this->isDebugMode = $enabled;
     }
 
+    /**
+     * Print the message passed.
+     *
+     * @param string $message Print the message
+     */
     public function printDebugMessage(string $message): void
     {
+        $this->error_description = $message;
         if ($this->isDebugMode) {
             echo $message.PHP_EOL;
         }
-    }
-
-    /**
-     * Set the text description of an error.
-     *
-     * @return string A description of an error
-     */
-    public function setErrorMessage(string $message): void
-    {
-        $this->error_description = $message;
     }
 
     /**
