@@ -4,3 +4,4 @@ composer.lock
 bin/
 .phpunit.result.cache
 src/Service/test.php
+.vscode/
