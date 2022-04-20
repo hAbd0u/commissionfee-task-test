@@ -24,9 +24,9 @@ class ParserTest extends TestCase
             'debug_mode' => false,
             'rates_api_url' => 'http://127.0.0.1:8888/currency-exchange-rates.txt',
             'currency_precision' => [
-                'EUR' => 3,
-                'USD' => 3,
-                'JPY' => 4,
+                'EUR' => 2,
+                'USD' => 4,
+                'JPY' => 2,
             ],
             'currency_fee_precision' => [
                 'EUR' => 2,
