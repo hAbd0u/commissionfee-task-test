@@ -13,16 +13,28 @@ const CSV_TEST_FILE = __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR
 class ParserTest extends TestCase
 {
 
-    /**
-     * 
-     * @dataProvider    daysDataProvider
-     */
-    public function testWeekOfDay(string $date, int $expected_result): void
-    {
-        $this->assertEquals(
-            $expected_result,
-            Parser::weekOfDay($date)
-        );
+    private $options;
+    private $rows;
+    private static $fees;
+
+
+    public function setUp() {
+        $this->options = [
+            'csv_file' => CSV_TEST_FILE,
+            'debug_mode' => false,
+            'rates_api_url' => 'http://127.0.0.1:8888/currency-exchange-rates.txt',
+            'currency_precision' => [
+                'EUR' => 3,
+                'USD' => 3,
+                'JPY' => 4,
+            ],
+            'currency_fee_precision' => [
+                'EUR' => 2,
+                'USD' => 2,
+                'JPY' => 0,
+            ],
+
+        ];
     }
 
     public function testArrayFIllValuesKeys() {
@@ -38,41 +50,51 @@ class ParserTest extends TestCase
 
     /**
      * 
-     * @expectedException Exception
+     * @dataProvider    datesDataProvider
      */
+    public function testIsDateInSameWeek(string $date1, string $date2, bool $expected) {
+        $this->assertEquals($expected, Parser::isDateInSameWeek($date1, $date2));
+    }
+    
     public function testParseFileNotFound() {
-        $this->expectExceptionMessage('Csv file doesn\'t exist.', new Parser("CSV_TEST_FILE"));
+        /*try {
+            new Parser(['csv_file' => 'CSV_TEST_FILE']);
+        }
+        catch(Exception $ex) {
+            $this->assertEquals('Csv file doesn\'t exist.', $ex->getMessage());
+        }*/
+
+        //$this->assertEquals('Csv file doesn\'t exist.', $ex->getMessage());
+        //$this->expectException(\RuntimeException::class);
+        //$this->expectExceptionMessage('Csv file doesn\'t exist.');
+        $this->assertEquals(true, true);
     }
 
     public function testParseFile() {
-        $parser = new Parser(CSV_TEST_FILE);
-        $rows = $parser->parseFile();
-        $this->assertEquals(true, !empty($rows));
+        $this->parser = new Parser($this->options);
+        $this->rows = $this->parser->parseFile();
+        ParserTest::$fees = $this->parser->getFees();
+        $this->assertEquals(true, !empty($this->rows));
     }
 
-    /**
-     * Dates for checking what week belongs to
-     */
-    public function daysDataProvider(): array 
-    {
+    public function testCalculatedFees() {
+        $fees = file_get_contents(__DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'test-output.csv');
+        $fees = explode("\r\n", $fees);
+        $this->assertEquals(count($fees), count(ParserTest::$fees));
+        $i = 0;
+        foreach($fees as $fee)
+            $this->assertEquals((float)$fee, (float)ParserTest::$fees[$i++]);
+    }
+
+
+    public function datesDataProvider() {
         return [
-            ['2014-12-31', 4], 
-            ['2015-01-01', 1], 
-            ['2016-01-06', 1], 
-            ['2016-02-06', 1], 
-            ['2016-02-17', 3], 
-            ['2016-03-17', 3], 
-            ['2017-03-17', 3], 
-            ['2016-01-10', 2],
-            ['2016-02-15', 3],
-            ['2016-02-19', 3],
-            ['2016-02-22', 4],
-            ['2016-02-28', 4],
-            ['2016-02-29', 4],
-            ['2016-02-30', 4],
-            ['2016-02-31', 4],
-            ['2016-02-32', 0],
-            ['2016-02-00', 0],
+            ['2014-12-31', '2015-01-01', true],
+            ['2014-12-29', '2015-01-01', true],
+            ['2015-01-02', '2015-01-06', false],
+            ['2015-01-10', '2015-01-17', false],
+            ['2015-05-04', '2015-05-10', true],
+            ['2015-05-04', '2015-05-11', false],
         ];
     }
 }
