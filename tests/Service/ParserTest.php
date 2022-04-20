@@ -79,7 +79,7 @@ class ParserTest extends TestCase
 
     public function testCalculatedFees() {
         $fees = file_get_contents(__DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'test-output.csv');
-        $fees = explode("\r\n", $fees);
+        $fees = explode("\n", $fees);
         $this->assertEquals(count($fees), count(ParserTest::$fees));
         $i = 0;
         foreach($fees as $fee)
