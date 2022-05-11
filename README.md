@@ -1,4 +1,4 @@
-# Paysera Commission task
+# Commission fee task
 ------------
 
 This is the implementation of the following [task](https://gist.github.com/PayseraGithub/ef2a59d0a6d6e680af2e46ccff1bca37) which is part of my interview.
